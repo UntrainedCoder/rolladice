@@ -67,7 +67,7 @@ export default function Home() {
       alignItems: 'center',
       justifyContent: 'center',
       padding: '16px',
-      fontFamily: 'Inter, system-ui, sans-serif'
+      fontFamily: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif'
     }}>
       {/* Header */}
       <div style={{
