@@ -11,7 +11,6 @@ export default function Home() {
     
     setIsRolling(true);
     
-    // Animate for 1 second
     setTimeout(() => {
       const newValue = Math.floor(Math.random() * 6) + 1;
       setDiceValue(newValue);
@@ -19,52 +18,119 @@ export default function Home() {
     }, 1000);
   };
 
-  const getDiceIcon = (value: number) => {
-    const dots = {
-      1: '⚀',
-      2: '⚁', 
-      3: '⚂',
-      4: '⚃',
-      5: '⚄',
-      6: '⚅'
+  const renderDiceDots = (value: number) => {
+    const dotPositions = {
+      1: [4], // center
+      2: [0, 8], // top-left, bottom-right
+      3: [0, 4, 8], // top-left, center, bottom-right
+      4: [0, 2, 6, 8], // corners
+      5: [0, 2, 4, 6, 8], // corners + center
+      6: [0, 2, 3, 5, 6, 8] // two columns of three
     };
-    return dots[value as keyof typeof dots];
+
+    return (
+      <div style={{
+        display: 'grid',
+        gridTemplateColumns: 'repeat(3, 1fr)',
+        gridTemplateRows: 'repeat(3, 1fr)',
+        gap: '8px',
+        width: '100%',
+        height: '100%',
+        padding: '16px'
+      }}>
+        {Array.from({ length: 9 }, (_, index) => (
+          <div key={index} style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center'
+          }}>
+            {dotPositions[value as keyof typeof dotPositions].includes(index) && (
+              <div style={{
+                width: '16px',
+                height: '16px',
+                backgroundColor: '#1f2937',
+                borderRadius: '50%'
+              }}></div>
+            )}
+          </div>
+        ))}
+      </div>
+    );
   };
 
   return (
-    <main className="min-h-screen bg-gradient-to-br from-orange-50 via-white to-orange-100 flex items-center justify-center p-4">
-      <div className="text-center space-y-8">
+    <div style={{
+      minHeight: '100vh',
+      background: 'linear-gradient(135deg, #fed7aa 0%, #ffffff 50%, #fed7aa 100%)',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      padding: '16px',
+      fontFamily: 'Inter, system-ui, sans-serif'
+    }}>
+      <div style={{
+        textAlign: 'center',
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '32px'
+      }}>
         {/* Dice Display */}
-        <div className="relative">
-          <div className={`
-            w-32 h-32 bg-white rounded-2xl shadow-2xl flex items-center justify-center text-6xl
-            border-4 border-orange-200
-            transition-all duration-1000 ease-out
-            ${isRolling ? 'animate-bounce scale-110 rotate-12' : 'scale-100 rotate-0'}
-            hover:shadow-orange-200/50
-          `}>
-            <span className={`
-              transition-all duration-1000
-              ${isRolling ? 'opacity-50' : 'opacity-100'}
-            `}>
-              {getDiceIcon(diceValue)}
-            </span>
+        <div style={{ position: 'relative' }}>
+          <div style={{
+            width: '128px',
+            height: '128px',
+            backgroundColor: 'white',
+            borderRadius: '16px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            border: '4px solid #fed7aa',
+            boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
+            transition: 'all 1s ease-out',
+            transform: isRolling ? 'scale(1.1) rotate(12deg)' : 'scale(1) rotate(0deg)',
+            animation: isRolling ? 'bounce 1s infinite' : 'none'
+          }}>
+            <div style={{
+              transition: 'opacity 1s',
+              opacity: isRolling ? 0.5 : 1,
+              width: '100%',
+              height: '100%'
+            }}>
+              {renderDiceDots(diceValue)}
+            </div>
           </div>
           
           {/* Glow effect */}
-          <div className={`
-            absolute inset-0 w-32 h-32 bg-orange-400 rounded-2xl blur-xl opacity-20
-            transition-all duration-1000
-            ${isRolling ? 'scale-125 opacity-40' : 'scale-100 opacity-20'}
-          `}></div>
+          <div style={{
+            position: 'absolute',
+            inset: 0,
+            width: '128px',
+            height: '128px',
+            backgroundColor: '#fb923c',
+            borderRadius: '16px',
+            filter: 'blur(20px)',
+            opacity: isRolling ? 0.4 : 0.2,
+            transition: 'all 1s',
+            transform: isRolling ? 'scale(1.25)' : 'scale(1)',
+            zIndex: -1
+          }}></div>
         </div>
 
         {/* Result Text */}
-        <div className="space-y-2">
-          <h2 className="text-2xl font-bold text-gray-800">
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+          <h2 style={{
+            fontSize: '24px',
+            fontWeight: 'bold',
+            color: '#1f2937',
+            margin: 0
+          }}>
             {isRolling ? 'Rolling...' : `You rolled a ${diceValue}`}
           </h2>
-          <p className="text-gray-600 text-lg">
+          <p style={{
+            fontSize: '18px',
+            color: '#6b7280',
+            margin: 0
+          }}>
             {isRolling ? 'The dice is tumbling...' : 'Ready for another roll?'}
           </p>
         </div>
@@ -73,20 +139,54 @@ export default function Home() {
         <button
           onClick={rollDice}
           disabled={isRolling}
-          className={`
-            px-8 py-4 bg-gradient-to-r from-orange-500 to-orange-600 
-            text-white font-bold text-lg rounded-xl shadow-lg
-            transition-all duration-300 ease-out
-            hover:from-orange-600 hover:to-orange-700 
-            hover:shadow-xl hover:scale-105
-            active:scale-95
-            disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none
-            focus:outline-none focus:ring-4 focus:ring-orange-300
-          `}
+          style={{
+            padding: '16px 32px',
+            background: 'linear-gradient(135deg, #f97316 0%, #ea580c 100%)',
+            color: 'white',
+            fontWeight: 'bold',
+            fontSize: '18px',
+            borderRadius: '12px',
+            border: 'none',
+            cursor: isRolling ? 'not-allowed' : 'pointer',
+            boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1)',
+            transition: 'all 0.3s ease-out',
+            opacity: isRolling ? 0.5 : 1,
+            transform: isRolling ? 'none' : 'scale(1)',
+            outline: 'none'
+          }}
+          onMouseEnter={(e) => {
+            if (!isRolling) {
+              e.currentTarget.style.transform = 'scale(1.05)';
+              e.currentTarget.style.boxShadow = '0 20px 25px -5px rgba(0, 0, 0, 0.1)';
+            }
+          }}
+          onMouseLeave={(e) => {
+            if (!isRolling) {
+              e.currentTarget.style.transform = 'scale(1)';
+              e.currentTarget.style.boxShadow = '0 10px 15px -3px rgba(0, 0, 0, 0.1)';
+            }
+          }}
         >
           {isRolling ? 'Rolling...' : 'Roll Dice'}
         </button>
       </div>
-    </main>
+
+      <style jsx>{`
+        @keyframes bounce {
+          0%, 20%, 53%, 80%, 100% {
+            transform: translate3d(0,0,0);
+          }
+          40%, 43% {
+            transform: translate3d(0, -30px, 0);
+          }
+          70% {
+            transform: translate3d(0, -15px, 0);
+          }
+          90% {
+            transform: translate3d(0,-4px,0);
+          }
+        }
+      `}</style>
+    </div>
   );
 }
