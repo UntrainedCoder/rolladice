@@ -63,16 +63,47 @@ export default function Home() {
       minHeight: '100vh',
       background: 'linear-gradient(135deg, #fed7aa 0%, #ffffff 50%, #fed7aa 100%)',
       display: 'flex',
+      flexDirection: 'column',
       alignItems: 'center',
       justifyContent: 'center',
       padding: '16px',
       fontFamily: 'Inter, system-ui, sans-serif'
     }}>
+      {/* Header */}
+      <div style={{
+        position: 'absolute',
+        top: '40px',
+        textAlign: 'center',
+        zIndex: 10
+      }}>
+        <h1 style={{
+          fontSize: '48px',
+          fontWeight: '800',
+          color: '#1f2937',
+          margin: '0 0 8px 0',
+          textShadow: '0 2px 4px rgba(0,0,0,0.1)',
+          letterSpacing: '-0.02em'
+        }}>
+          Roll a Dice
+        </h1>
+        <p style={{
+          fontSize: '18px',
+          color: '#6b7280',
+          margin: '0',
+          fontWeight: '500',
+          opacity: 0.8
+        }}>
+          WebApp from TechPremi.Com
+        </p>
+      </div>
+
+      {/* Main Content */}
       <div style={{
         textAlign: 'center',
         display: 'flex',
         flexDirection: 'column',
-        gap: '32px'
+        gap: '32px',
+        marginTop: '60px'
       }}>
         {/* Dice Display */}
         <div style={{ position: 'relative' }}>
